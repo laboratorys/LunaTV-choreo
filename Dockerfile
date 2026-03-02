@@ -25,7 +25,7 @@ WORKDIR /app
 RUN mkdir -p /app/data /app/.next/cache && chown -R 10014:10014 /app
 
 ARG BAK_VERSION=2.2
-RUN curl -L "https://github.com/laboratorys/backup-to-github/releases/download/v${BAK_VERSION}/backup2gh-linux-amd64.tar.gz" -o backup2gh.tar.gz \
+RUN curl -L "https://github.com/laboratorys/backup2gh/releases/download/v${BAK_VERSION}/backup2gh-linux-amd64.tar.gz" -o backup2gh.tar.gz \
     && tar -xzf backup2gh.tar.gz \
     && rm backup2gh.tar.gz \
     && chmod +x backup2gh \
