@@ -1,4 +1,4 @@
-FROM ghcr.io/laboratorys/lunatv:f AS lunatv-source
+FROM ghcr.io/laboratorys/lunatv:dev AS lunatv-source
 
 FROM node:20-alpine AS runner
 
