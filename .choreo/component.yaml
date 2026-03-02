@@ -1,0 +1,10 @@
+# +required The configuration file schema version
+schemaVersion: 1.2
+endpoints:
+  - name: lunatv
+    service:
+      basePath: /
+      port: 3000
+    type: REST
+    networkVisibilities:
+      - Public
