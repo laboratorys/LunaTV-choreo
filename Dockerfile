@@ -22,15 +22,12 @@ RUN curl -L "https://github.com/laboratorys/backup2gh/releases/download/v${BAK_V
     && chmod +x backup2gh \
     && chown 10014:10014 backup2gh
 
-# --- 关键修正：全量尝试复制 ---
-# 如果 /app 找不到，说明原作者可能没把文件放在 /app 目录。
-# 我们从源镜像的工作目录复制所有内容到当前工作目录
-COPY --from=lunatv-source --chown=10014:10014 /app/ ./
+COPY --from=lunatv-source /app ./
+RUN chown -R 10014:10014 /app && \
+    chmod -R 755 /app \
 
-# 诊断步骤：这行非常重要！请在 Choreo 构建日志里找这部分的输出
 RUN echo "Checking files in /app:" && ls -R /app
 
-# 确保数据目录
 RUN mkdir -p /app/data && chown -R 10014:10014 /app/data
 
 ENV NODE_ENV=production \
