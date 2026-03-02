@@ -31,12 +31,10 @@ RUN curl -L "https://github.com/laboratorys/backup2gh/releases/download/v${BAK_V
     && chmod +x backup2gh \
     && chown 10014:10014 backup2gh
 
-# 复制程序文件并确保权限
-COPY --from=lunatv-source --chown=10014:10014 /app/.next/standalone ./
-COPY --from=lunatv-source --chown=10014:10014 /app/scripts ./scripts
-COPY --from=lunatv-source --chown=10014:10014 /app/start.js ./start.js
-COPY --from=lunatv-source --chown=10014:10014 /app/public ./public
-COPY --from=lunatv-source --chown=10014:10014 /app/.next/static ./.next/static
+COPY --from=lunatv-source --chown=10014:10014 /app ./
+
+# 确保数据目录存在并属于 10014
+RUN mkdir -p /app/data && chown -R 10014:10014 /app/data
 
 ENV NODE_ENV=production \
     HOSTNAME=0.0.0.0 \
