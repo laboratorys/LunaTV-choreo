@@ -38,4 +38,4 @@ RUN ln -s /app/data/next-cache /app/.next/cache && \
 USER 10014
 WORKDIR /app
 
-CMD ["node", "start.js"]
+ENTRYPOINT ["bash", "/app/entrypoint.sh"]
