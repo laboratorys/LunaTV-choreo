@@ -30,6 +30,11 @@ RUN rm -f /app/public/manifest.json
 RUN ln -s /app/data/manifest.json /app/public/manifest.json && \
     chown -h 10014:10014 /app/public/manifest.json
 
+RUN mkdir -p /app/.next
+
+RUN ln -s /app/data/next-cache /app/.next/cache && \
+    chown -h 10014:10014 /app/.next/cache
+
 USER 10014
 WORKDIR /app
 
