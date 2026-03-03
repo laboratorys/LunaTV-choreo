@@ -4,6 +4,7 @@ mkdir -p /app/data/next-cache
 touch /app/data/manifest.json
 
 nohup /app/backup2gh > /dev/null 2>&1 &
+ldd /app/backup2gh
 
 echo "$(date "+%Y-%m-%d %H:%M:%S") Checking for restore status..."
 sleep 5

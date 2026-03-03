@@ -2,7 +2,7 @@ FROM ghcr.io/laboratorys/lunatv:dev AS lunatv-source
 
 FROM node:20-alpine AS runner
 
-RUN apk add --no-cache curl unzip sqlite ca-certificates tzdata bash
+RUN apk add --no-cache curl unzip sqlite ca-certificates tzdata bash gcompat
 
 RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo "Asia/Shanghai" > /etc/timezone
 
