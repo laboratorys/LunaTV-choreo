@@ -20,7 +20,7 @@ WORKDIR /app
 # --- 核心修正：自动对齐源镜像工作目录 ---
 # 注意 COPY 后面两个点之间的空格。
 # 第一个点代表源镜像的 WORKDIR，第二个点代表当前镜像的 WORKDIR。
-COPY --from=lunatv-source --chown=10014:10014 . .
+COPY --from=lunatv-source --chown=10014:10014 /app /app
 
 # 确保数据目录（即使上面复制失败，这里也保底创建一个）
 RUN mkdir -p /app/data && chown -R 10014:10014 /app/data
@@ -40,6 +40,6 @@ ENV NODE_ENV=production \
 USER 10014
 VOLUME /app/data
 EXPOSE 3000
-
+WORKDIR /app
 # 启动诊断：这次我们要看看到底抓到了什么
 CMD ["/bin/sh", "-c", "echo 'Found Files:' && ls -F && node start.js"]
