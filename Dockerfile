@@ -29,7 +29,7 @@ RUN mkdir -p /app/data && chown -R 10014:10014 /app/data
 ARG BAK_VERSION=2.2
 RUN curl -L "https://github.com/laboratorys/backup2gh/releases/download/v${BAK_VERSION}/backup2gh-linux-amd64.tar.gz" -o backup2gh.tar.gz \
     && tar -xzf backup2gh.tar.gz && rm backup2gh.tar.gz \
-    && chmod +x backup2gh && chown 10014:10014 backup2gh
+    && chmod +x backup2gh && chown 10014:10014 /app/backup2gh
 
 ENV NODE_ENV=production \
     HOSTNAME=0.0.0.0 \
@@ -42,4 +42,4 @@ VOLUME /app/data
 EXPOSE 3000
 WORKDIR /app
 # 启动诊断：这次我们要看看到底抓到了什么
-CMD ["/bin/sh", "-c", "echo 'Found Files:' && ls -F && node start.js"]
+CMD ["/bin/sh", "-c", "echo 'Current User:' $(whoami) && echo 'Files in /app:' && ls -F /app && node /app/start.js"]
