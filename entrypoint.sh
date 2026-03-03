@@ -1,14 +1,10 @@
 #!/bin/sh
 
-# 1. 确保挂载的持久化目录中存在必要的子文件夹和文件
-# 这样 Dockerfile 里的软链接才能找到目标
 mkdir -p /app/data/next-cache
 touch /app/data/manifest.json
 
-# 2. 启动备份/恢复工具
 nohup /app/backup2gh > /dev/null 2>&1 &
 
-# 3. 等待恢复完成
 echo "$(date "+%Y-%m-%d %H:%M:%S") Checking for restore status..."
 sleep 5
 retry_count=0
@@ -26,7 +22,6 @@ while [ $retry_count -lt $max_retries ]; do
     fi
 done
 
-# 4. 启动主程序
 echo "$(date "+%Y-%m-%d %H:%M:%S") Starting LunaTV server..."
-# 使用 exec 确保 node 进程成为 PID 1，以便正确处理容器信号
+
 exec node start.js

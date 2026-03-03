@@ -23,17 +23,19 @@ ENV NODE_ENV=production \
     PORT=3000 \
     DOCKER_ENV=true \
     SQLITE_PATH=/app/data/tv.db
-RUN mkdir -p /app/data && chown -R 10014:10014 /app/data
 
-RUN rm -f /app/public/manifest.json
+COPY entrypoint.sh /app/entrypoint.sh
 
-RUN ln -s /app/data/manifest.json /app/public/manifest.json && \
-    chown -h 10014:10014 /app/public/manifest.json
+RUN chmod +x /app/entrypoint.sh
 
-RUN mkdir -p /app/.next
+RUN mkdir -p /app/data /app/.next /app/public && \
+    chown -R 10014:10014 /app/data /app/.next /app/public
 
-RUN ln -s /app/data/next-cache /app/.next/cache && \
-    chown -h 10014:10014 /app/.next/cache
+
+RUN rm -rf /app/public/manifest.json /app/.next/cache && \
+    ln -sf /app/data/manifest.json /app/public/manifest.json && \
+    ln -sf /app/data/next-cache /app/.next/cache && \
+    chown -h 10014:10014 /app/public/manifest.json /app/.next/cache
 
 USER 10014
 WORKDIR /app
