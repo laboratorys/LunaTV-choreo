@@ -28,7 +28,7 @@ RUN mkdir -p /app/data && chown -R 10014:10014 /app/data
 RUN rm -f /app/public/manifest.json
 
 RUN ln -s /app/data/manifest.json /app/public/manifest.json && \
-    chown -h 10014:10014 /app/public/manifest.json \
+    chown -h 10014:10014 /app/public/manifest.json
 
 USER 10014
 WORKDIR /app
