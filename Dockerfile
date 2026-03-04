@@ -1,8 +1,24 @@
+# 第一阶段：在 Alpine 环境下编译 backup2gh (开启 CGO)
+FROM golang:1.25-alpine AS builder-bak
+# 安装编译 CGO 所需的工具链
+RUN apk add --no-cache git gcc musl-dev sqlite-dev
+
+WORKDIR /build
+# 克隆仓库
+RUN git clone https://github.com/laboratorys/backup2gh.git .
+
+# 开启 CGO 编译
+# 这样编译出的二进制文件会链接到 Alpine 的 musl libc
+RUN CGO_ENABLED=1 GOOS=linux go build -o backup2gh .
+
+# 第二阶段：获取 lunatv 源码
 FROM ghcr.io/laboratorys/lunatv:dev AS lunatv-source
 
+# 第三阶段：最终运行环境
 FROM node:20-alpine AS runner
 
-RUN apk add --no-cache curl unzip sqlite ca-certificates tzdata bash libc6-compat
+# 安装基础运行依赖（运行开启 CGO 的程序通常需要基础库）
+RUN apk add --no-cache curl unzip sqlite ca-certificates tzdata bash
 
 RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo "Asia/Shanghai" > /etc/timezone
 
@@ -11,12 +27,10 @@ RUN addgroup -g 10014 choreo && \
 
 WORKDIR /app
 
+# 从 builder-bak 拷贝针对 musl 编译的 backup2gh
+COPY --from=builder-bak --chown=10014:10014 /build/backup2gh /app/backup2gh
+# 从源镜像拷贝应用
 COPY --from=lunatv-source --chown=10014:10014 /app /app
-
-ARG BAK_VERSION=2.2
-RUN curl -L "https://github.com/laboratorys/backup2gh/releases/download/v${BAK_VERSION}/backup2gh-linux-amd64.tar.gz" -o backup2gh.tar.gz \
-    && tar -xzf backup2gh.tar.gz && rm backup2gh.tar.gz \
-    && chmod +x backup2gh && chown 10014:10014 backup2gh
 
 ENV NODE_ENV=production \
     HOSTNAME=0.0.0.0 \
@@ -25,12 +39,10 @@ ENV NODE_ENV=production \
     SQLITE_PATH=/app/data/tv.db
 
 COPY entrypoint.sh /app/entrypoint.sh
-
-RUN chmod +x /app/entrypoint.sh
+RUN chmod +x /app/entrypoint.sh /app/backup2gh
 
 RUN mkdir -p /app/data /app/.next /app/public && \
     chown -R 10014:10014 /app/data /app/.next /app/public
-
 
 RUN rm -rf /app/public/manifest.json /app/.next/cache && \
     ln -sf /app/data/manifest.json /app/public/manifest.json && \
