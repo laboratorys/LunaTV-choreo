@@ -4,10 +4,7 @@ FROM node:20-alpine AS runner
 
 RUN apk add --no-cache curl unzip sqlite ca-certificates tzdata bash
 
-RUN wget -q -O /etc/apk/keys/sgerrand.rsa.pub https://alpine-pkgs.sgerrand.com/sgerrand.rsa.pub \
-    && wget https://github.com/sgerrand/alpine-pkg-glibc/releases/download/2.35-r1/glibc-2.35-r1.apk \
-    && apk add --force-overwrite glibc-2.35-r1.apk \
-    && rm glibc-2.35-r1.apk
+RUN apk add --no-cache gcompat
 
 RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo "Asia/Shanghai" > /etc/timezone
 
