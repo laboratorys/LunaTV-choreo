@@ -18,7 +18,7 @@ WORKDIR /app
 
 COPY --from=lunatv-source --chown=10014:10014 /app /app
 
-ARG BAK_VERSION=2.2
+ARG BAK_VERSION=2.3
 RUN curl -L "https://github.com/laboratorys/backup2gh/releases/download/v${BAK_VERSION}/backup2gh-linux-amd64.tar.gz" -o backup2gh.tar.gz \
     && tar -xzf backup2gh.tar.gz && rm backup2gh.tar.gz \
     && chmod +x backup2gh && chown 10014:10014 backup2gh
