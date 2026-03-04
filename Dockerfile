@@ -5,6 +5,7 @@ FROM node:20-alpine AS runner
 RUN apk add --no-cache curl unzip sqlite ca-certificates tzdata bash
 
 RUN apk add --no-cache gcompat
+RUN mkdir -p /lib64 && ln -s /lib/ld-musl-x86_64.so.1 /lib64/ld-linux-x86-64.so.2
 
 RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime && echo "Asia/Shanghai" > /etc/timezone
 
