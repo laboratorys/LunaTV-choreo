@@ -1,5 +1,5 @@
 # 第一阶段：在 Alpine 环境下编译 backup2gh (开启 CGO)
-FROM golang:1.25-alpine AS builder-bak
+FROM golang:1.26-alpine AS builder-bak
 # 安装编译 CGO 所需的工具链
 RUN apk add --no-cache git gcc musl-dev sqlite-dev
 
@@ -9,13 +9,13 @@ RUN git clone https://github.com/laboratorys/backup2gh.git .
 
 # 开启 CGO 编译
 # 这样编译出的二进制文件会链接到 Alpine 的 musl libc
-RUN CGO_ENABLED=1 GOOS=linux go build -o backup2gh .
+RUN CGO_ENABLED=0 GOOS=linux go build -o backup2gh .
 
 # 第二阶段：获取 lunatv 源码
 FROM ghcr.io/laboratorys/lunatv:dev AS lunatv-source
 
 # 第三阶段：最终运行环境
-FROM node:20-alpine AS runner
+FROM node:22-alpine AS runner
 
 # 安装基础运行依赖（运行开启 CGO 的程序通常需要基础库）
 RUN apk add --no-cache curl unzip sqlite ca-certificates tzdata bash
